@@ -10,7 +10,7 @@ crate-type = ["rlib"]
 path = "src/lib.rs"
 
 [dependencies]
-jni = "0.19.0"
+jni = "0.21.1"
 chromium = { path = "../chromium/" }
 chromium_subp = { path = "../chromium_subp/" }
 chromium_jni_macro = { path = "../chromium_jni_macro/" }
