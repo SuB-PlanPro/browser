@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bin
 Bundle-SymbolicName: org.eclipse.set.browser.lib;singleton:=true
-Bundle-Version: 60.11.0.qualifier
+Bundle-Version: 60.11.1
 Automatic-Module-Name: org.eclipse.set.browser.bin
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.core.runtime,
