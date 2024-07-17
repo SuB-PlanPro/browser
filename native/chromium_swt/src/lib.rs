@@ -32,6 +32,7 @@ pub fn cefswt_init(
     japp: *mut cef::cef_app_t,
     subp_path: *const c_char,
     cef_path: *const c_char,
+    temp_path: *const c_char,
     user_agent_product: *const c_char,
     locale: *const c_char,
     debug_port: c_int,
@@ -40,6 +41,7 @@ pub fn cefswt_init(
 ) {
     let subp_path = chromium::utils::str_from_c(subp_path);
     let cef_path = chromium::utils::str_from_c(cef_path);
+    let temp_path = chromium::utils::str_from_c(temp_path);
     let log_path = chromium::utils::str_from_c(log_path);
     let log_level = unsafe { std::mem::transmute(log_level) };
 
@@ -47,6 +49,7 @@ pub fn cefswt_init(
 
     let subp = std::path::Path::new(&subp_path);
     let cef_dir = std::path::Path::new(&cef_path);
+    let temp_dir = std::path::Path::new(&temp_path);
 
     let subp_cef = chromium::utils::cef_string(subp.to_str().unwrap());
 
@@ -57,6 +60,7 @@ pub fn cefswt_init(
     let resources_cef = chromium::utils::cef_string(cef_dir.to_str().unwrap());
     let locales_cef = chromium::utils::cef_string(cef_dir.join("locales").to_str().unwrap());
     let framework_dir_cef = chromium::utils::cef_string_empty();
+    let cache_dir_cef = chromium::utils::cef_string(temp_dir.join("cef_cache").to_str().unwrap());
     let log_path = chromium::utils::cef_string(log_path);
 
     let settings = cef::_cef_settings_t {
@@ -68,8 +72,8 @@ pub fn cefswt_init(
         external_message_pump: 1,
         windowless_rendering_enabled: 0,
         command_line_args_disabled: 0,
-        cache_path: chromium::utils::cef_string_empty(),
-        root_cache_path: chromium::utils::cef_string_empty(),
+        cache_path: cache_dir_cef,
+        root_cache_path: cache_dir_cef,
         persist_session_cookies: 1,
         persist_user_preferences: 1,
         user_agent: chromium::utils::cef_string_empty(),

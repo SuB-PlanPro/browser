@@ -13,6 +13,7 @@
  */
 package org.eclipse.set.browser.cef;
 
+import java.io.IOException;
 import java.net.HttpCookie;
 import java.time.Instant;
 import java.util.HashMap;
@@ -135,7 +136,7 @@ public class ChromiumStatic {
 
 			ChromiumLib.cefswt_init(app.get(),
 					CEFLibrary.getSubprocessExePath(),
-					CEFResource.getPath().toAbsolutePath().normalize().toString(),
+					CEFResource.getPath().toAbsolutePath().normalize().toString(), CEFLibrary.getTempPath(),
 					configuration.UserAgentProduct, configuration.Locale,
 					configuration.DebugPort, configuration.LogPath,
 					configuration.LogLevel.getValue());
@@ -146,6 +147,11 @@ public class ChromiumStatic {
 					return;
 				}
 				ChromiumStatic.shutdown();
+				try {
+					CEFLibrary.cleanTempPath();
+				} catch (IOException e) {
+					// ignore failed deletion
+				}
 			});
 		}
 

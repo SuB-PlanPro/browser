@@ -13,8 +13,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-
+import java.util.stream.Stream;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.set.browser.cef.win32.CEFResource;
 
@@ -41,8 +44,45 @@ public class CEFLibrary {
 	 * @return a path for temporary files for the browser
 	 */
 	public static String getTempPath() {
-		return Paths.get(System.getenv("APPDATA"), "Eclipse SET", "cef")
-				.toAbsolutePath().toString();
+		return getTempPathBase().resolve(Long.toString(ProcessHandle.current().pid())).toString();
+	}
+	
+	public static Path getTempPathBase() {
+		return Paths.get(System.getenv("APPDATA"), "Eclipse SET", "cef_temp")
+				.toAbsolutePath();
+	}
+	
+	public static void cleanTempPath() throws IOException {
+		Path path = getTempPathBase();
+		if (!Files.exists(path)) {
+			return;
+		}
+ 
+		try (final Stream<Path> files = Files.list(path)) {
+			files.filter(p -> {
+				// Only consider directories
+				if (!p.toFile().isDirectory()) {
+					return false;
+				}
+
+				try {
+					// Check if process is still running, but not this process
+					// This may find another process, with a reused PID, however
+					// this acceptable, as over time all directories will be
+					// cleaned up
+					final long pid = Long.parseLong(p.getFileName().toString());
+					return ProcessHandle.current().pid() == pid || ProcessHandle.of(pid).isEmpty();
+				} catch (NumberFormatException e) {
+					return true;
+				}
+			}).forEach(p -> {
+				try {
+					FileUtils.deleteDirectory(p.toFile());
+				} catch (final IOException e) {
+					// ignore failed deletion
+				}
+			});
+		}
 	}
 
 	/**

@@ -255,7 +255,7 @@ public class ChromiumLib extends C {
 	 * @param logPath
 	 */
 	public static final native void cefswt_init(long app, String subprocessPath,
-			String cefPath, String userAgentProduct,
+			String cefPath, String tempPath, String userAgentProduct,
 			String locale, int debugPort, String logPath, int logLevel);
 
 	/**

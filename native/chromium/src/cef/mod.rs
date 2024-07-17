@@ -490,7 +490,7 @@ pub enum cef_content_setting_types_t {
     CEF_CONTENT_SETTING_TYPE_PERMISSION_AUTOREVOCATION_DATA = 62,
     #[doc = " Stores per-origin state of the most recently selected directory for the\n use by the File System Access API."]
     CEF_CONTENT_SETTING_TYPE_FILE_SYSTEM_LAST_PICKED_DIRECTORY = 63,
-    #[doc = " Controls access to the getDisplayMedia API when {preferCurrentTab: true}\n is specified."]
+    #[doc = " Controls access to the getDisplayMedia API."]
     CEF_CONTENT_SETTING_TYPE_DISPLAY_CAPTURE = 64,
     #[doc = " Website setting to store permissions metadata granted to paths on the\n local file system via the File System Access API.\n |FILE_SYSTEM_WRITE_GUARD| is the corresponding \"guard\" setting. The stored\n data represents valid permission only if\n |FILE_SYSTEM_ACCESS_EXTENDED_PERMISSION| is enabled via user opt-in.\n Otherwise, they represent \"recently granted but revoked permission\", which\n are used to restore the permission."]
     CEF_CONTENT_SETTING_TYPE_FILE_SYSTEM_ACCESS_CHOOSER_DATA = 65,
@@ -502,8 +502,8 @@ pub enum cef_content_setting_types_t {
     CEF_CONTENT_SETTING_TYPE_HTTP_ALLOWED = 68,
     #[doc = " Stores metadata related to form fill, such as e.g. whether user data was\n autofilled on a specific website."]
     CEF_CONTENT_SETTING_TYPE_FORMFILL_METADATA = 69,
-    #[doc = " Setting to indicate that there is an active federated sign-in session\n between a specified relying party and a specified identity provider for\n a specified account. When this is present it allows access to session\n management capabilities between the sites. This setting is associated\n with the relying party's origin."]
-    CEF_CONTENT_SETTING_TYPE_FEDERATED_IDENTITY_ACTIVE_SESSION = 70,
+    #[doc = " Setting to indicate that there is an active federated sign-in session\n between a specified relying party and a specified identity provider for\n a specified account. When this is present it allows access to session\n management capabilities between the sites. This setting is associated\n with the relying party's origin.\n Obsolete on Nov 2023."]
+    CEF_CONTENT_SETTING_TYPE_DEPRECATED_FEDERATED_IDENTITY_ACTIVE_SESSION = 70,
     #[doc = " Setting to indicate whether Chrome should automatically apply darkening to\n web content."]
     CEF_CONTENT_SETTING_TYPE_AUTO_DARK_WEB_CONTENT = 71,
     #[doc = " Setting to indicate whether Chrome should request the desktop view of a\n site instead of the mobile one."]
@@ -540,18 +540,30 @@ pub enum cef_content_setting_types_t {
     CEF_CONTENT_SETTING_TYPE_ALL_SCREEN_CAPTURE = 87,
     #[doc = " Stores per origin metadata for cookie controls."]
     CEF_CONTENT_SETTING_TYPE_COOKIE_CONTROLS_METADATA = 88,
-    #[doc = " Content Setting for 3PC accesses granted via 3PC deprecation trial."]
-    CEF_CONTENT_SETTING_TYPE_TPCD_SUPPORT = 89,
-    #[doc = " Content setting used to indicate whether entering picture-in-picture\n automatically should be enabled."]
-    CEF_CONTENT_SETTING_TYPE_AUTO_PICTURE_IN_PICTURE = 90,
+    #[doc = " Content Setting for temporary 3PC accesses granted by user behavior\n heuristics."]
+    CEF_CONTENT_SETTING_TYPE_TPCD_HEURISTICS_GRANTS = 89,
     #[doc = " Content Setting for 3PC accesses granted by metadata delivered via the\n component updater service. This type will only be used when\n `net::features::kTpcdMetadataGrants` is enabled."]
-    CEF_CONTENT_SETTING_TYPE_TPCD_METADATA_GRANTS = 91,
+    CEF_CONTENT_SETTING_TYPE_TPCD_METADATA_GRANTS = 90,
+    #[doc = " Content Setting for 3PC accesses granted via 3PC deprecation trial."]
+    CEF_CONTENT_SETTING_TYPE_TPCD_TRIAL = 91,
+    #[doc = " Content Setting for 3PC accesses granted via top-level 3PC deprecation\n trial. Similar to TPCD_TRIAL, but applicable at the page-level for the\n lifetime of the page that served the token, rather than being specific to\n a requesting-origin/top-level-site combination and persistent."]
+    CEF_CONTENT_SETTING_TYPE_TOP_LEVEL_TPCD_TRIAL = 92,
+    #[doc = " Content setting used to indicate whether entering picture-in-picture\n automatically should be enabled."]
+    CEF_CONTENT_SETTING_TYPE_AUTO_PICTURE_IN_PICTURE = 93,
     #[doc = " Whether user has opted into keeping file/directory permissions persistent\n between visits for a given origin. When enabled, permission metadata\n stored under |FILE_SYSTEM_ACCESS_CHOOSER_DATA| can auto-grant incoming\n permission request."]
-    CEF_CONTENT_SETTING_TYPE_FILE_SYSTEM_ACCESS_EXTENDED_PERMISSION = 92,
-    #[doc = " Content Setting for temporary 3PC accesses granted by user behavior\n heuristics."]
-    CEF_CONTENT_SETTING_TYPE_TPCD_HEURISTICS_GRANTS = 93,
-    #[doc = " Content Setting for temporary 3PC accesses granted by user behavior\n heuristics."]
-    CEF_CONTENT_SETTING_TYPE_NUM_TYPES = 94,
+    CEF_CONTENT_SETTING_TYPE_FILE_SYSTEM_ACCESS_EXTENDED_PERMISSION = 94,
+    #[doc = " Whether the FSA Persistent Permissions restore prompt is eligible to be\n shown to the user, for a given origin."]
+    CEF_CONTENT_SETTING_TYPE_FILE_SYSTEM_ACCESS_RESTORE_PERMISSION = 95,
+    #[doc = " Whether an application capturing another tab, may scroll and zoom\n the captured tab."]
+    CEF_CONTENT_SETTING_TYPE_CAPTURED_SURFACE_CONTROL = 96,
+    #[doc = " Content setting for access to smart card readers.\n The \"guard\" content setting stores whether to allow sites to access the\n Smart Card API."]
+    CEF_CONTENT_SETTING_TYPE_SMART_CARD_GUARD = 97,
+    #[doc = " Content setting for access to smart card readers.\n The \"guard\" content setting stores whether to allow sites to access the\n Smart Card API."]
+    CEF_CONTENT_SETTING_TYPE_SMART_CARD_DATA = 98,
+    #[doc = " Content settings for access to printers for the Web Printing API."]
+    CEF_CONTENT_SETTING_TYPE_WEB_PRINTING = 99,
+    #[doc = " Content settings for access to printers for the Web Printing API."]
+    CEF_CONTENT_SETTING_TYPE_NUM_TYPES = 100,
 }
 #[repr(i32)]
 #[doc = "\n Supported content setting values. Should be kept in sync with Chromium's\n ContentSetting type.\n"]
@@ -669,7 +681,7 @@ pub struct _cef_settings_t {
     pub locales_dir_path: cef_string_t,
     #[doc = "\n Set to true (1) to disable loading of pack files for resources and\n locales. A resource bundle handler must be provided for the browser and\n render processes via CefApp::GetResourceBundleHandler() if loading of pack\n files is disabled. Also configurable using the \"disable-pack-loading\"\n command- line switch.\n"]
     pub pack_loading_disabled: ::std::os::raw::c_int,
-    #[doc = "\n Set to a value between 1024 and 65535 to enable remote debugging on the\n specified port. Also configurable using the \"remote-debugging-port\"\n command-line switch. Remote debugging can be accessed by loading the\n chrome://inspect page in Google Chrome. Port numbers 9222 and 9229 are\n discoverable by default. Other port numbers may need to be configured via\n \"Discover network targets\" on the Devices tab.\n"]
+    #[doc = "\n Set to a value between 1024 and 65535 to enable remote debugging on the\n specified port. Also configurable using the \"remote-debugging-port\"\n command-line switch. Specifying 0 via the command-line switch will result\n in the selection of an ephemeral port and the port number will be printed\n as part of the WebSocket endpoint URL to stderr. If a cache directory path\n is provided the port will also be written to the\n <cache-dir>/DevToolsActivePort file. Remote debugging can be accessed by\n loading the chrome://inspect page in Google Chrome. Port numbers 9222 and\n 9229 are discoverable by default. Other port numbers may need to be\n configured via \"Discover network targets\" on the Devices tab.\n"]
     pub remote_debugging_port: ::std::os::raw::c_int,
     #[doc = "\n The number of stack trace frames to capture for uncaught exceptions.\n Specify a positive value to enable the\n CefRenderProcessHandler::OnUncaughtException() callback. Specify 0\n (default value) and OnUncaughtException() will not be called. Also\n configurable using the \"uncaught-exception-stack-size\" command-line\n switch.\n"]
     pub uncaught_exception_stack_size: ::std::os::raw::c_int,
@@ -1011,6 +1023,7 @@ pub enum cef_errorcode_t {
     ERR_TOO_MANY_ACCEPT_CH_RESTARTS = -382,
     ERR_INCONSISTENT_IP_ADDRESS_SPACE = -383,
     ERR_CACHED_IP_ADDRESS_SPACE_BLOCKED_BY_PRIVATE_NETWORK_ACCESS_POLICY = -384,
+    ERR_BLOCKED_BY_PRIVATE_NETWORK_ACCESS_CHECKS = -385,
     ERR_CACHE_MISS = -400,
     ERR_CACHE_READ_FAILURE = -401,
     ERR_CACHE_WRITE_FAILURE = -402,
@@ -1872,6 +1885,8 @@ pub struct _cef_pdf_print_settings_t {
     pub footer_template: cef_string_t,
     #[doc = "\n Set to true (1) to generate tagged (accessible) PDF.\n"]
     pub generate_tagged_pdf: ::std::os::raw::c_int,
+    #[doc = "\n Set to true (1) to generate a document outline.\n"]
+    pub generate_document_outline: ::std::os::raw::c_int,
 }
 #[repr(i32)]
 #[doc = "\n Supported UI scale factors for the platform. SCALE_FACTOR_NONE is used for\n density independent resources such as string, html/js files or an image that\n can be used for any scale factors (such as wallpapers).\n"]
@@ -2166,7 +2181,7 @@ pub struct _cef_media_sink_device_info_t {
 }
 impl cef_chrome_page_action_icon_type_t {
     pub const CEF_CPAIT_MAX_VALUE: cef_chrome_page_action_icon_type_t =
-        cef_chrome_page_action_icon_type_t::CEF_CPAIT_PRICE_INSIGHTS;
+        cef_chrome_page_action_icon_type_t::CEF_CPAIT_PRICE_READ_ANYTHING;
 }
 #[repr(i32)]
 #[doc = "\n Chrome page action icon types. Should be kept in sync with Chromium's\n PageActionIconType type.\n"]
@@ -2199,6 +2214,7 @@ pub enum cef_chrome_page_action_icon_type_t {
     CEF_CPAIT_SAVE_IBAN = 24,
     CEF_CPAIT_MANDATORY_REAUTH = 25,
     CEF_CPAIT_PRICE_INSIGHTS = 26,
+    CEF_CPAIT_PRICE_READ_ANYTHING = 27,
 }
 impl cef_chrome_toolbar_button_type_t {
     pub const CEF_CTBT_MAX_VALUE: cef_chrome_toolbar_button_type_t =
@@ -4051,9 +4067,10 @@ pub struct _cef_frame_t {
     pub get_name: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_frame_t) -> cef_string_userfree_t,
     >,
-    #[doc = "\n Returns the globally unique identifier for this frame or < 0 if the\n underlying frame does not yet exist.\n"]
-    pub get_identifier:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t) -> i64>,
+    #[doc = "\n Returns the globally unique identifier for this frame or NULL if the\n underlying frame does not yet exist.\n\n The resulting string must be freed by calling cef_string_userfree_free()."]
+    pub get_identifier: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_frame_t) -> cef_string_userfree_t,
+    >,
     #[doc = "\n Returns the parent of this frame or NULL if this is the main (top-level)\n frame.\n"]
     pub get_parent:
         ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t) -> *mut _cef_frame_t>,
@@ -4332,7 +4349,7 @@ pub struct _cef_cookie_manager_t {
 #[doc = "\n Structure used for managing cookies. The functions of this structure may be\n called on any thread unless otherwise indicated.\n"]
 pub type cef_cookie_manager_t = _cef_cookie_manager_t;
 extern "C" {
-    #[doc = "\n Returns the global cookie manager. By default data will be stored at\n cef_settings_t.cache_path if specified or in memory otherwise. If |callback|\n is non-NULL it will be executed asnychronously on the UI thread after the\n manager's storage has been initialized. Using this function is equivalent to\n calling cef_request_context_t::cef_request_context_get_global_context()->Get\n DefaultCookieManager().\n"]
+    #[doc = "\n Returns the global cookie manager. By default data will be stored at\n cef_settings_t.cache_path if specified or in memory otherwise. If |callback|\n is non-NULL it will be executed asnychronously on the UI thread after the\n manager's storage has been initialized. Using this function is equivalent to\n calling cef_request_context_t::cef_request_context_get_global_context()-\n >GetDefaultCookieManager().\n"]
     pub fn cef_cookie_manager_get_global_manager(
         callback: *mut _cef_completion_callback_t,
     ) -> *mut cef_cookie_manager_t;
@@ -4558,7 +4575,7 @@ pub struct _cef_media_router_t {
 #[doc = "\n Supports discovery of and communication with media devices on the local\n network via the Cast and DIAL protocols. The functions of this structure may\n be called on any browser process thread unless otherwise indicated.\n"]
 pub type cef_media_router_t = _cef_media_router_t;
 extern "C" {
-    #[doc = "\n Returns the MediaRouter object associated with the global request context.\n If |callback| is non-NULL it will be executed asnychronously on the UI\n thread after the manager's storage has been initialized. Equivalent to\n calling cef_request_context_t::cef_request_context_get_global_context()->get\n _media_router().\n"]
+    #[doc = "\n Returns the MediaRouter object associated with the global request context.\n If |callback| is non-NULL it will be executed asnychronously on the UI\n thread after the manager's storage has been initialized. Equivalent to\n calling cef_request_context_t::cef_request_context_get_global_context()-\n >get_media_router().\n"]
     pub fn cef_media_router_get_global(
         callback: *mut _cef_completion_callback_t,
     ) -> *mut cef_media_router_t;
@@ -4593,7 +4610,7 @@ pub struct _cef_media_observer_t {
             state: cef_media_route_connection_state_t,
         ),
     >,
-    #[doc = "\n A message was recieved over |route|. |message| is only valid for the scope\n of this callback and should be copied if necessary.\n"]
+    #[doc = "\n A message was received over |route|. |message| is only valid for the scope\n of this callback and should be copied if necessary.\n"]
     pub on_route_message_received: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_media_observer_t,
@@ -4786,11 +4803,6 @@ pub type cef_preference_manager_t = _cef_preference_manager_t;
 extern "C" {
     #[doc = "\n Returns the global preference manager object.\n"]
     pub fn cef_preference_manager_get_global() -> *mut cef_preference_manager_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_request_context_handler_t {
-    _unused: [u8; 0],
 }
 #[doc = "\n Callback structure for cef_request_context_t::ResolveHost.\n"]
 #[repr(C)]
@@ -5058,11 +5070,14 @@ pub struct _cef_browser_t {
         unsafe extern "C" fn(self_: *mut _cef_browser_t) -> *mut _cef_frame_t,
     >,
     #[doc = "\n Returns the frame with the specified identifier, or NULL if not found.\n"]
-    pub get_frame_byident: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_browser_t, identifier: i64) -> *mut _cef_frame_t,
+    pub get_frame_by_identifier: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_t,
+            identifier: *const cef_string_t,
+        ) -> *mut _cef_frame_t,
     >,
     #[doc = "\n Returns the frame with the specified name, or NULL if not found.\n"]
-    pub get_frame: ::std::option::Option<
+    pub get_frame_by_name: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_browser_t,
             name: *const cef_string_t,
@@ -5073,11 +5088,7 @@ pub struct _cef_browser_t {
         ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_browser_t) -> usize>,
     #[doc = "\n Returns the identifiers of all existing frames.\n"]
     pub get_frame_identifiers: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_browser_t,
-            identifiersCount: *mut usize,
-            identifiers: *mut i64,
-        ),
+        unsafe extern "C" fn(self_: *mut _cef_browser_t, identifiers: cef_string_list_t),
     >,
     #[doc = "\n Returns the names of all existing frames.\n"]
     pub get_frame_names: ::std::option::Option<
@@ -6178,7 +6189,7 @@ pub struct _cef_menu_model_t {
             color: *mut cef_color_t,
         ) -> ::std::os::raw::c_int,
     >,
-    #[doc = "\n Sets the font list for the specified |command_id|. If |font_list| is NULL\n the system font will be used. Returns true (1) on success. The format is\n \"<FONT_FAMILY_LIST>,[STYLES] <SIZE>\", where: - FONT_FAMILY_LIST is a\n comma-separated list of font family names, - STYLES is an optional space-\n separated list of style names\n   (case-sensitive \"Bold\" and \"Italic\" are supported), and\n - SIZE is an integer font size in pixels with the suffix \"px\".\n\n Here are examples of valid font description strings: - \"Arial, Helvetica,\n Bold Italic 14px\" - \"Arial, 14px\"\n"]
+    #[doc = "\n Sets the font list for the specified |command_id|. If |font_list| is NULL\n the system font will be used. Returns true (1) on success. The format is\n \"<FONT_FAMILY_LIST>,[STYLES] <SIZE>\", where:\n - FONT_FAMILY_LIST is a comma-separated list of font family names,\n - STYLES is an optional space-separated list of style names (case-\n   sensitive \"Bold\" and \"Italic\" are supported), and\n - SIZE is an integer font size in pixels with the suffix \"px\".\n\n Here are examples of valid font description strings:\n - \"Arial, Helvetica, Bold Italic 14px\"\n - \"Arial, 14px\"\n"]
     pub set_font_list: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_menu_model_t,
@@ -6186,7 +6197,7 @@ pub struct _cef_menu_model_t {
             font_list: *const cef_string_t,
         ) -> ::std::os::raw::c_int,
     >,
-    #[doc = "\n Sets the font list for the specified |index|. Specify an |index| value of\n -1 to set the default font. If |font_list| is NULL the system font will be\n used. Returns true (1) on success. The format is\n \"<FONT_FAMILY_LIST>,[STYLES] <SIZE>\", where: - FONT_FAMILY_LIST is a\n comma-separated list of font family names, - STYLES is an optional space-\n separated list of style names\n   (case-sensitive \"Bold\" and \"Italic\" are supported), and\n - SIZE is an integer font size in pixels with the suffix \"px\".\n\n Here are examples of valid font description strings: - \"Arial, Helvetica,\n Bold Italic 14px\" - \"Arial, 14px\"\n"]
+    #[doc = "\n Sets the font list for the specified |index|. Specify an |index| value of\n - 1 to set the default font. If |font_list| is NULL the system font will\n - FONT_FAMILY_LIST is a comma-separated list of font family names,\n - STYLES is an optional space-separated list of style names (case-\n   sensitive \"Bold\" and \"Italic\" are supported), and\n - SIZE is an integer font size in pixels with the suffix \"px\".\n\n Here are examples of valid font description strings:\n - \"Arial, Helvetica, Bold Italic 14px\"\n - \"Arial, 14px\"\n"]
     pub set_font_list_at: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_menu_model_t,
@@ -6861,7 +6872,7 @@ pub struct _cef_focus_handler_t {
         unsafe extern "C" fn(self_: *mut _cef_focus_handler_t, browser: *mut _cef_browser_t),
     >,
 }
-#[doc = "\n Implement this structure to handle events related to cef_frame_t life span.\n The order of callbacks is:\n\n (1) During initial cef_browser_host_t creation and navigation of the main\n frame: - cef_frame_handler_t::OnFrameCreated => The initial main frame\n object has been\n   created. Any commands will be queued until the frame is attached.\n - cef_frame_handler_t::OnMainFrameChanged => The initial main frame object\n has\n   been assigned to the browser.\n - cef_life_span_handler_t::OnAfterCreated => The browser is now valid and\n can be\n   used.\n - cef_frame_handler_t::OnFrameAttached => The initial main frame object is\n now\n   connected to its peer in the renderer process. Commands can be routed.\n\n (2) During further cef_browser_host_t navigation/loading of the main frame\n     and/or sub-frames:\n - cef_frame_handler_t::OnFrameCreated => A new main frame or sub-frame\n object\n   has been created. Any commands will be queued until the frame is attached.\n - cef_frame_handler_t::OnFrameAttached => A new main frame or sub-frame\n object\n   is now connected to its peer in the renderer process. Commands can be\n   routed.\n - cef_frame_handler_t::OnFrameDetached => An existing main frame or sub-\n frame\n   object has lost its connection to the renderer process. If multiple\n   objects are detached at the same time then notifications will be sent for\n   any sub-frame objects before the main frame object. Commands can no longer\n   be routed and will be discarded.\n - cef_frame_handler_t::OnMainFrameChanged => A new main frame object has\n been\n   assigned to the browser. This will only occur with cross-origin navigation\n   or re-navigation after renderer process termination (due to crashes, etc).\n\n (3) During final cef_browser_host_t destruction of the main frame: -\n cef_frame_handler_t::OnFrameDetached => Any sub-frame objects have lost\n their\n   connection to the renderer process. Commands can no longer be routed and\n   will be discarded.\n - cef_life_span_handler_t::OnBeforeClose => The browser has been destroyed.\n - cef_frame_handler_t::OnFrameDetached => The main frame object have lost\n its\n   connection to the renderer process. Notifications will be sent for any\n   sub-frame objects before the main frame object. Commands can no longer be\n   routed and will be discarded.\n - cef_frame_handler_t::OnMainFrameChanged => The final main frame object has\n   been removed from the browser.\n\n Cross-origin navigation and/or loading receives special handling.\n\n When the main frame navigates to a different origin the OnMainFrameChanged\n callback (2) will be executed with the old and new main frame objects.\n\n When a new sub-frame is loaded in, or an existing sub-frame is navigated to,\n a different origin from the parent frame, a temporary sub-frame object will\n first be created in the parent's renderer process. That temporary sub-frame\n will then be discarded after the real cross-origin sub-frame is created in\n the new/target renderer process. The client will receive cross-origin\n navigation callbacks (2) for the transition from the temporary sub-frame to\n the real sub-frame. The temporary sub-frame will not recieve or execute\n commands during this transitional period (any sent commands will be\n discarded).\n\n When a new popup browser is created in a different origin from the parent\n browser, a temporary main frame object for the popup will first be created\n in the parent's renderer process. That temporary main frame will then be\n discarded after the real cross-origin main frame is created in the\n new/target renderer process. The client will recieve creation and initial\n navigation callbacks (1) for the temporary main frame, followed by cross-\n origin navigation callbacks (2) for the transition from the temporary main\n frame to the real main frame. The temporary main frame may receive and\n execute commands during this transitional period (any sent commands may be\n executed, but the behavior is potentially undesirable since they execute in\n the parent browser's renderer process and not the new/target renderer\n process).\n\n Callbacks will not be executed for placeholders that may be created during\n pre-commit navigation for sub-frames that do not yet exist in the renderer\n process. Placeholders will have cef_frame_t::get_identifier() == -4.\n\n The functions of this structure will be called on the UI thread unless\n otherwise indicated.\n"]
+#[doc = "\n Implement this structure to handle events related to cef_frame_t life span.\n The order of callbacks is:\n\n (1) During initial cef_browser_host_t creation and navigation of the main\n frame:\n - cef_frame_handler_t::OnFrameCreated => The initial main frame object has\n   been created. Any commands will be queued until the frame is attached.\n - cef_frame_handler_t::OnMainFrameChanged => The initial main frame object\n   has been assigned to the browser.\n - cef_life_span_handler_t::OnAfterCreated => The browser is now valid and\n   can be used.\n - cef_frame_handler_t::OnFrameAttached => The initial main frame object is\n   now connected to its peer in the renderer process. Commands can be routed.\n\n (2) During further cef_browser_host_t navigation/loading of the main frame\n     and/or sub-frames:\n - cef_frame_handler_t::OnFrameCreated => A new main frame or sub-frame\n   object has been created. Any commands will be queued until the frame is\n   attached.\n - cef_frame_handler_t::OnFrameAttached => A new main frame or sub-frame\n   object is now connected to its peer in the renderer process. Commands can\n   be routed.\n - cef_frame_handler_t::OnFrameDetached => An existing main frame or sub-\n   frame object has lost its connection to the renderer process. If multiple\n   objects are detached at the same time then notifications will be sent for\n   any sub-frame objects before the main frame object. Commands can no longer\n   be routed and will be discarded.\n - cef_frame_handler_t::OnMainFrameChanged => A new main frame object has\n   been assigned to the browser. This will only occur with cross-origin\n   navigation or re-navigation after renderer process termination (due to\n   crashes, etc).\n\n (3) During final cef_browser_host_t destruction of the main frame:\n - cef_frame_handler_t::OnFrameDetached => Any sub-frame objects have lost\n   their connection to the renderer process. Commands can no longer be routed\n   and will be discarded.\n - cef_life_span_handler_t::OnBeforeClose => The browser has been destroyed.\n - cef_frame_handler_t::OnFrameDetached => The main frame object have lost\n   its connection to the renderer process. Notifications will be sent for any\n   sub-frame objects before the main frame object. Commands can no longer be\n   routed and will be discarded.\n - cef_frame_handler_t::OnMainFrameChanged => The final main frame object has\n   been removed from the browser.\n\n Cross-origin navigation and/or loading receives special handling.\n\n When the main frame navigates to a different origin the OnMainFrameChanged\n callback (2) will be executed with the old and new main frame objects.\n\n When a new sub-frame is loaded in, or an existing sub-frame is navigated to,\n a different origin from the parent frame, a temporary sub-frame object will\n first be created in the parent's renderer process. That temporary sub-frame\n will then be discarded after the real cross-origin sub-frame is created in\n the new/target renderer process. The client will receive cross-origin\n navigation callbacks (2) for the transition from the temporary sub-frame to\n the real sub-frame. The temporary sub-frame will not receive or execute\n commands during this transitional period (any sent commands will be\n discarded).\n\n When a new popup browser is created in a different origin from the parent\n browser, a temporary main frame object for the popup will first be created\n in the parent's renderer process. That temporary main frame will then be\n discarded after the real cross-origin main frame is created in the\n new/target renderer process. The client will receive creation and initial\n navigation callbacks (1) for the temporary main frame, followed by cross-\n origin navigation callbacks (2) for the transition from the temporary main\n frame to the real main frame. The temporary main frame may receive and\n execute commands during this transitional period (any sent commands may be\n executed, but the behavior is potentially undesirable since they execute in\n the parent browser's renderer process and not the new/target renderer\n process).\n\n Callbacks will not be executed for placeholders that may be created during\n pre-commit navigation for sub-frames that do not yet exist in the renderer\n process. Placeholders will have cef_frame_t::get_identifier() == -4.\n\n The functions of this structure will be called on the UI thread unless\n otherwise indicated.\n"]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_frame_handler_t {
@@ -7021,7 +7032,7 @@ pub struct _cef_life_span_handler_t {
     pub on_after_created: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_life_span_handler_t, browser: *mut _cef_browser_t),
     >,
-    #[doc = "\n Called when a browser has recieved a request to close. This may result\n directly from a call to cef_browser_host_t::*close_browser() or indirectly\n if the browser is parented to a top-level window created by CEF and the\n user attempts to close that window (by clicking the 'X', for example). The\n do_close() function will be called after the JavaScript 'onunload' event\n has been fired.\n\n An application should handle top-level owner window close notifications by\n calling cef_browser_host_t::try_close_browser() or\n cef_browser_host_t::CloseBrowser(false (0)) instead of allowing the window\n to close immediately (see the examples below). This gives CEF an\n opportunity to process the 'onbeforeunload' event and optionally cancel\n the close before do_close() is called.\n\n When windowed rendering is enabled CEF will internally create a window or\n view to host the browser. In that case returning false (0) from do_close()\n will send the standard close notification to the browser's top-level owner\n window (e.g. WM_CLOSE on Windows, performClose: on OS X, \"delete_event\" on\n Linux or cef_window_delegate_t::can_close() callback from Views). If the\n browser's host window/view has already been destroyed (via view hierarchy\n tear-down, for example) then do_close() will not be called for that\n browser since is no longer possible to cancel the close.\n\n When windowed rendering is disabled returning false (0) from do_close()\n will cause the browser object to be destroyed immediately.\n\n If the browser's top-level owner window requires a non-standard close\n notification then send that notification from do_close() and return true\n (1).\n\n The cef_life_span_handler_t::on_before_close() function will be called\n after do_close() (if do_close() is called) and immediately before the\n browser object is destroyed. The application should only exit after\n on_before_close() has been called for all existing browsers.\n\n The below examples describe what should happen during window close when\n the browser is parented to an application-provided top-level window.\n\n Example 1: Using cef_browser_host_t::try_close_browser(). This is\n recommended for clients using standard close handling and windows created\n on the browser process UI thread. 1.  User clicks the window close button\n which sends a close notification\n     to the application's top-level window.\n 2.  Application's top-level window receives the close notification and\n     calls TryCloseBrowser() (which internally calls CloseBrowser(false)).\n     TryCloseBrowser() returns false so the client cancels the window\n     close.\n 3.  JavaScript 'onbeforeunload' handler executes and shows the close\n     confirmation dialog (which can be overridden via\n     CefJSDialogHandler::OnBeforeUnloadDialog()).\n 4.  User approves the close. 5.  JavaScript 'onunload' handler executes.\n 6.  CEF sends a close notification to the application's top-level window\n     (because DoClose() returned false by default).\n 7.  Application's top-level window receives the close notification and\n     calls TryCloseBrowser(). TryCloseBrowser() returns true so the client\n     allows the window close.\n 8.  Application's top-level window is destroyed. 9.  Application's\n on_before_close() handler is called and the browser object\n     is destroyed.\n 10. Application exits by calling cef_quit_message_loop() if no other\n browsers\n     exist.\n\n Example 2: Using cef_browser_host_t::CloseBrowser(false (0)) and\n implementing the do_close() callback. This is recommended for clients\n using non-standard close handling or windows that were not created on the\n browser process UI thread. 1.  User clicks the window close button which\n sends a close notification\n     to the application's top-level window.\n 2.  Application's top-level window receives the close notification and:\n     A. Calls CefBrowserHost::CloseBrowser(false).\n     B. Cancels the window close.\n 3.  JavaScript 'onbeforeunload' handler executes and shows the close\n     confirmation dialog (which can be overridden via\n     CefJSDialogHandler::OnBeforeUnloadDialog()).\n 4.  User approves the close. 5.  JavaScript 'onunload' handler executes.\n 6.  Application's do_close() handler is called. Application will:\n     A. Set a flag to indicate that the next close attempt will be allowed.\n     B. Return false.\n 7.  CEF sends an close notification to the application's top-level window.\n 8.  Application's top-level window receives the close notification and\n     allows the window to close based on the flag from #6B.\n 9.  Application's top-level window is destroyed. 10. Application's\n on_before_close() handler is called and the browser object\n     is destroyed.\n 11. Application exits by calling cef_quit_message_loop() if no other\n browsers\n     exist.\n"]
+    #[doc = "\n Called when a browser has received a request to close. This may result\n directly from a call to cef_browser_host_t::*close_browser() or indirectly\n if the browser is parented to a top-level window created by CEF and the\n user attempts to close that window (by clicking the 'X', for example). The\n do_close() function will be called after the JavaScript 'onunload' event\n has been fired.\n\n An application should handle top-level owner window close notifications by\n calling cef_browser_host_t::try_close_browser() or\n cef_browser_host_t::CloseBrowser(false (0)) instead of allowing the window\n to close immediately (see the examples below). This gives CEF an\n opportunity to process the 'onbeforeunload' event and optionally cancel\n the close before do_close() is called.\n\n When windowed rendering is enabled CEF will internally create a window or\n view to host the browser. In that case returning false (0) from do_close()\n will send the standard close notification to the browser's top-level owner\n window (e.g. WM_CLOSE on Windows, performClose: on OS X, \"delete_event\" on\n Linux or cef_window_delegate_t::can_close() callback from Views). If the\n browser's host window/view has already been destroyed (via view hierarchy\n tear-down, for example) then do_close() will not be called for that\n browser since is no longer possible to cancel the close.\n\n When windowed rendering is disabled returning false (0) from do_close()\n will cause the browser object to be destroyed immediately.\n\n If the browser's top-level owner window requires a non-standard close\n notification then send that notification from do_close() and return true\n (1).\n\n The cef_life_span_handler_t::on_before_close() function will be called\n after do_close() (if do_close() is called) and immediately before the\n browser object is destroyed. The application should only exit after\n on_before_close() has been called for all existing browsers.\n\n The below examples describe what should happen during window close when\n the browser is parented to an application-provided top-level window.\n\n Example 1: Using cef_browser_host_t::try_close_browser(). This is\n recommended for clients using standard close handling and windows created\n on the browser process UI thread. 1.  User clicks the window close button\n which sends a close notification\n     to the application's top-level window.\n 2.  Application's top-level window receives the close notification and\n     calls TryCloseBrowser() (which internally calls CloseBrowser(false)).\n     TryCloseBrowser() returns false so the client cancels the window\n     close.\n 3.  JavaScript 'onbeforeunload' handler executes and shows the close\n     confirmation dialog (which can be overridden via\n     CefJSDialogHandler::OnBeforeUnloadDialog()).\n 4.  User approves the close. 5.  JavaScript 'onunload' handler executes.\n 6.  CEF sends a close notification to the application's top-level window\n     (because DoClose() returned false by default).\n 7.  Application's top-level window receives the close notification and\n     calls TryCloseBrowser(). TryCloseBrowser() returns true so the client\n     allows the window close.\n 8.  Application's top-level window is destroyed. 9.  Application's\n on_before_close() handler is called and the browser object\n     is destroyed.\n 10. Application exits by calling cef_quit_message_loop() if no other\n browsers\n     exist.\n\n Example 2: Using cef_browser_host_t::CloseBrowser(false (0)) and\n implementing the do_close() callback. This is recommended for clients\n using non-standard close handling or windows that were not created on the\n browser process UI thread. 1.  User clicks the window close button which\n sends a close notification\n     to the application's top-level window.\n 2.  Application's top-level window receives the close notification and:\n     A. Calls CefBrowserHost::CloseBrowser(false).\n     B. Cancels the window close.\n 3.  JavaScript 'onbeforeunload' handler executes and shows the close\n     confirmation dialog (which can be overridden via\n     CefJSDialogHandler::OnBeforeUnloadDialog()).\n 4.  User approves the close. 5.  JavaScript 'onunload' handler executes.\n 6.  Application's do_close() handler is called. Application will:\n     A. Set a flag to indicate that the next close attempt will be allowed.\n     B. Return false.\n 7.  CEF sends an close notification to the application's top-level window.\n 8.  Application's top-level window receives the close notification and\n     allows the window to close based on the flag from #6B.\n 9.  Application's top-level window is destroyed. 10. Application's\n on_before_close() handler is called and the browser object\n     is destroyed.\n 11. Application exits by calling cef_quit_message_loop() if no other\n browsers\n     exist.\n"]
     pub do_close: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_life_span_handler_t,
@@ -7980,6 +7991,33 @@ extern "C" {
     #[doc = "\n Returns the singleton global cef_command_line_t object. The returned object\n will be read-only.\n"]
     pub fn cef_command_line_get_global() -> *mut cef_command_line_t;
 }
+#[doc = "\n Implement this structure to provide handler implementations. The handler\n instance will not be released until all objects related to the context have\n been destroyed.\n"]
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_request_context_handler_t {
+    #[doc = "\n Base structure.\n"]
+    pub base: cef_base_ref_counted_t,
+    #[doc = "\n Called on the browser process UI thread immediately after the request\n context has been initialized.\n"]
+    pub on_request_context_initialized: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_request_context_handler_t,
+            request_context: *mut _cef_request_context_t,
+        ),
+    >,
+    #[doc = "\n Called on the browser process IO thread before a resource request is\n initiated. The |browser| and |frame| values represent the source of the\n request, and may be NULL for requests originating from service workers or\n cef_urlrequest_t. |request| represents the request contents and cannot be\n modified in this callback. |is_navigation| will be true (1) if the\n resource request is a navigation. |is_download| will be true (1) if the\n resource request is a download. |request_initiator| is the origin (scheme\n + domain) of the page that initiated the request. Set\n |disable_default_handling| to true (1) to disable default handling of the\n request, in which case it will need to be handled via\n cef_resource_request_handler_t::GetResourceHandler or it will be canceled.\n To allow the resource load to proceed with default handling return NULL.\n To specify a handler for the resource return a\n cef_resource_request_handler_t object. This function will not be called if\n the client associated with |browser| returns a non-NULL value from\n cef_request_handler_t::GetResourceRequestHandler for the same request\n (identified by cef_request_t::GetIdentifier).\n"]
+    pub get_resource_request_handler: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_request_context_handler_t,
+            browser: *mut _cef_browser_t,
+            frame: *mut _cef_frame_t,
+            request: *mut _cef_request_t,
+            is_navigation: ::std::os::raw::c_int,
+            is_download: ::std::os::raw::c_int,
+            request_initiator: *const cef_string_t,
+            disable_default_handling: *mut ::std::os::raw::c_int,
+        ) -> *mut _cef_resource_request_handler_t,
+    >,
+}
 #[doc = "\n Structure used to implement browser process callbacks. The functions of this\n structure will be called on the browser process main thread unless otherwise\n indicated.\n"]
 #[repr(C)]
 #[derive(Debug, Copy, Clone, JNICEFCallback)]
@@ -8016,9 +8054,15 @@ pub struct _cef_browser_process_handler_t {
     pub on_schedule_message_pump_work: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_process_handler_t, delay_ms: i64),
     >,
-    #[doc = "\n Return the default client for use with a newly created browser window. If\n null is returned the browser will be unmanaged (no callbacks will be\n executed for that browser) and application shutdown will be blocked until\n the browser window is closed manually. This function is currently only\n used with the chrome runtime.\n"]
+    #[doc = "\n Return the default client for use with a newly created browser window\n (cef_browser_t object). If null is returned the cef_browser_t will be\n unmanaged (no callbacks will be executed for that cef_browser_t) and\n application shutdown will be blocked until the browser window is closed\n manually. This function is currently only used with the Chrome runtime\n when creating new browser windows via Chrome UI.\n"]
     pub get_default_client: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_process_handler_t) -> *mut _cef_client_t,
+    >,
+    #[doc = "\n Return the default handler for use with a new user or incognito profile\n (cef_request_context_t object). If null is returned the\n cef_request_context_t will be unmanaged (no callbacks will be executed for\n that cef_request_context_t). This function is currently only used with the\n Chrome runtime when creating new browser windows via Chrome UI.\n"]
+    pub get_default_request_context_handler: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_process_handler_t,
+        ) -> *mut _cef_request_context_handler_t,
     >,
 }
 #[doc = "\n Implement this structure for asynchronous task execution. If the task is\n posted successfully and if the associated message loop is still running then\n the execute() function will be called on the target thread. If the task\n fails to post then the task object may be destroyed on the source thread\n instead of the target thread. For this reason be cautious when performing\n work in the task object destructor.\n"]
@@ -8883,7 +8927,7 @@ pub struct _cef_scheme_handler_factory_t {
 #[doc = "\n Structure that creates cef_resource_handler_t instances for handling scheme\n requests. The functions of this structure will always be called on the IO\n thread.\n"]
 pub type cef_scheme_handler_factory_t = _cef_scheme_handler_factory_t;
 extern "C" {
-    #[doc = "\n Register a scheme handler factory with the global request context. An NULL\n |domain_name| value for a standard scheme will cause the factory to match\n all domain names. The |domain_name| value will be ignored for non-standard\n schemes. If |scheme_name| is a built-in scheme and no handler is returned by\n |factory| then the built-in scheme handler factory will be called. If\n |scheme_name| is a custom scheme then you must also implement the\n cef_app_t::on_register_custom_schemes() function in all processes. This\n function may be called multiple times to change or remove the factory that\n matches the specified |scheme_name| and optional |domain_name|. Returns\n false (0) if an error occurs. This function may be called on any thread in\n the browser process. Using this function is equivalent to calling cef_reques\n t_context_t::cef_request_context_get_global_context()->register_scheme_handl\n er_factory().\n"]
+    #[doc = "\n Register a scheme handler factory with the global request context. An NULL\n |domain_name| value for a standard scheme will cause the factory to match\n all domain names. The |domain_name| value will be ignored for non-standard\n schemes. If |scheme_name| is a built-in scheme and no handler is returned by\n |factory| then the built-in scheme handler factory will be called. If\n |scheme_name| is a custom scheme then you must also implement the\n cef_app_t::on_register_custom_schemes() function in all processes. This\n function may be called multiple times to change or remove the factory that\n matches the specified |scheme_name| and optional |domain_name|. Returns\n false (0) if an error occurs. This function may be called on any thread in\n the browser process. Using this function is equivalent to calling cef_reques\n t_context_t::cef_request_context_get_global_context()-\n >register_scheme_handler_factory().\n"]
     pub fn cef_register_scheme_handler_factory(
         scheme_name: *const cef_string_t,
         domain_name: *const cef_string_t,
@@ -8891,7 +8935,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    #[doc = "\n Clear all scheme handler factories registered with the global request\n context. Returns false (0) on error. This function may be called on any\n thread in the browser process. Using this function is equivalent to calling\n cef_request_context_t::cef_request_context_get_global_context()->clear_schem\n e_handler_factories().\n"]
+    #[doc = "\n Clear all scheme handler factories registered with the global request\n context. Returns false (0) on error. This function may be called on any\n thread in the browser process. Using this function is equivalent to calling\n cef_request_context_t::cef_request_context_get_global_context()-\n >clear_scheme_handler_factories().\n"]
     pub fn cef_clear_scheme_handler_factories() -> ::std::os::raw::c_int;
 }
 #[doc = "\n Implement this structure to provide handler implementations. Methods will be\n called by the process and/or thread indicated.\n"]
