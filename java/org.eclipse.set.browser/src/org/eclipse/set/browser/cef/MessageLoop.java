@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Display;
  * @author Stuecker
  */
 public class MessageLoop {
-	private static final int LOOP = 75;
+	private static final int LOOP = 5;
 
 	private boolean loopDisable;
 
@@ -119,7 +119,7 @@ public class MessageLoop {
 		loopWork = () -> {
 			if (!loopShutdown && !Display.getDefault().isDisposed()) {
 				loop_work();
-				Display.getDefault().timerExec(LOOP * 2, loopWork);
+				Display.getDefault().timerExec(LOOP, loopWork);
 			}
 		};
 		Display.getDefault().timerExec(LOOP, loopWork);
