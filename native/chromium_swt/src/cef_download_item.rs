@@ -24,10 +24,10 @@ pub unsafe extern "C" fn get_full_path(
     let path = (*item).get_full_path.unwrap()(item);
 
     let value = CStr::from_ptr(crate::cefswt_cefstring_to_java(path));
-    return env
+    env
         .new_string(value.to_str().unwrap())
         .unwrap()
-        .into_inner();
+        .into_inner()
 }
 
 #[jni_name("org.eclipse.set.browser.lib.cef_download_item_t")]
@@ -56,10 +56,10 @@ pub unsafe extern "C" fn get_url(
 ) -> jstring {
     let url = (*item).get_url.unwrap()(item);
     let value = CStr::from_ptr(crate::cefswt_cefstring_to_java(url));
-    return env
+    env
         .new_string(value.to_str().unwrap())
         .unwrap()
-        .into_inner();
+        .into_inner()
 }
 
 #[jni_name("org.eclipse.set.browser.lib.cef_download_item_t")]

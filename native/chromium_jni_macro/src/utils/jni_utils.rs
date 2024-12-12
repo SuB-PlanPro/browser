@@ -58,20 +58,20 @@ fn get_type_parameter(p: &Path) -> Punctuated<GenericArgument, Comma> {
 /// Extracts Args from an Option function pointer path Option<*mut fn(Args...)>
 pub fn extract_arguments(p: &Path) -> syn::punctuated::Punctuated<BareFnArg, Comma> {
     let bracket_args = get_type_parameter(p);
-    return match bracket_args.first().unwrap() {
+    match bracket_args.first().unwrap() {
         GenericArgument::Type(Type::BareFn(t)) => t.inputs.clone(),
         _ => panic!("Not a type"),
-    };
+    }
 }
 
 /// Extracts the result type from an Option function pointer path Option<*mut fn(...) -> Result>
 pub fn extract_result(p: &Path) -> Option<syn::Type> {
     let bracket_args = get_type_parameter(p);
-    return match bracket_args.first().unwrap() {
+    match bracket_args.first().unwrap() {
         GenericArgument::Type(Type::BareFn(t)) => match t.output.clone() {
             ReturnType::Type(_, ty) => Some(*ty),
             ReturnType::Default => None,
         },
         _ => panic!("Not a type (result)"),
-    };
+    }
 }

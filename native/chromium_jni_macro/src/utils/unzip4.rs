@@ -6,7 +6,6 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  */
-
 /// Trait for unzipping 4-tuples
 pub trait Unzip4<A, B, C, D> {
     fn unzip4<FromA, FromB, FromC, FromD>(self) -> (FromA, FromB, FromC, FromD)

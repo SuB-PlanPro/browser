@@ -11,7 +11,6 @@
  * Contributors:
  *   Guillermo Zunino, Equo - initial implementation
  */
-
 fn main() {
     link();
 }

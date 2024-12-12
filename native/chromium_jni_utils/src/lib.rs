@@ -85,10 +85,10 @@ impl<T> FromJavaValue for *mut T {
 impl FromJavaMember for usize {
     fn from_java_member(env: JNIEnv, object: JObject, name: &str) -> usize {
         // Read an integer field
-        return env
+        env
             .get_field(object, name, "I")
             .and_then(|v| v.i())
-            .unwrap() as usize;
+            .unwrap() as usize
     }
 }
 
