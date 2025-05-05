@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.set</groupId>
 	<artifactId>org.eclipse.set.browser.releng.parent</artifactId>
-	<version>60.21.3</version>
+	<version>60.21.4</version>
 	<packaging>pom</packaging>
 
 	<properties>
