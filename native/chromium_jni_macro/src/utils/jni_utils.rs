@@ -29,7 +29,7 @@ fn jni_type_signature(ty: &Type) -> char {
     match ty {
         Type::Ptr(_) => 'J',
         Type::Path(_p) => 'I',
-        _ => panic!("Unhandled type {:?}", ty),
+        _ => panic!("Unhandled type {ty:?}"),
     }
 }
 

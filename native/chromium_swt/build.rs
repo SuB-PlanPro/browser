@@ -28,8 +28,7 @@ fn link() {
     let cef_path = get_cef_path();
     if !cef_path.exists() {
         panic!(
-            "cargo:warning=Extract and rename cef binary (minimal) distro to {:?}",
-            cef_path
+            "cargo:warning=Extract and rename cef binary (minimal) distro to {cef_path:?}"
         );
     }
 

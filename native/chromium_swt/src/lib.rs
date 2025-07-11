@@ -104,11 +104,11 @@ pub fn cefswt_init(
 fn set_env_var(cef_path: &str, var: &str, sep: &str) {
     match std::env::var(var) {
         Ok(paths) => {
-            let paths = format!("{}{}{}", cef_path, sep, paths);
+            let paths = format!("{cef_path}{sep}{paths}");
             std::env::set_var(var, paths);
         }
         Err(e) => {
-            println!("Couldn't read {} ({})", var, e);
+            println!("Couldn't read {var} ({e})");
             std::env::set_var(var, cef_path);
         }
     };

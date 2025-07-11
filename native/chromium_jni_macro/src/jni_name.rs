@@ -76,5 +76,5 @@ pub fn create_jni_fn_name(namespace: &str, name: &str, suffix: &str) -> String {
     let namespace = namespace.replace('_', "_1").replace('.', "_");
     let name = name.replace('_', "_1");
     let suffix = suffix.replace('_', "_1");
-    format!("Java_{}_{}{}", namespace, name, suffix)
+    format!("Java_{namespace}_{name}{suffix}")
 }

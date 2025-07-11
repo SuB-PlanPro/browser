@@ -88,7 +88,7 @@ fn build_initialization(
         }
 
         let field_ident = field.ident.as_ref().unwrap();
-        let func_ident = syn::Ident::new(&format!("jni_{}", field_ident), Span::call_site());
+        let func_ident = syn::Ident::new(&format!("jni_{field_ident}"), Span::call_site());
         let signature = jni_signature(field);
         
         quote! { #field_ident: match env.get_method_id(class, stringify!(#field_ident), #signature) {
@@ -143,7 +143,7 @@ fn build_jni_callback(
             Some(_) => quote! { return chromium_jni_utils::FromJavaValue::from_java_value(env, result); }
         };
         
-        let func_ident = syn::Ident::new(&format!("jni_{}", field_ident), Span::call_site());
+        let func_ident = syn::Ident::new(&format!("jni_{field_ident}"), Span::call_site());
         
         let signature = jni_signature(field);
         quote! {

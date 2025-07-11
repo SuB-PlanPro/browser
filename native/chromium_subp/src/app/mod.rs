@@ -203,7 +203,7 @@ fn register_function(
     handler: &mut V8Handler,
 ) {
     // Add the "myfunc" function to the "window" object.
-    let handler_name = chromium::utils::cef_string(&format!("{}", id));
+    let handler_name = chromium::utils::cef_string(&format!("{id}"));
     let func =
         unsafe { chromium::cef::cef_v8value_create_function(&handler_name, handler.as_ptr()) };
     let s = unsafe {
@@ -255,19 +255,19 @@ unsafe fn convert_type(
         (ret_str, socket::ReturnType::Null)
     } else if (*ret).is_bool.unwrap()(ret) == 1 {
         let ret_cef = (*ret).get_bool_value.unwrap()(ret);
-        let ret_str = CString::new(format!("{}", ret_cef)).unwrap();
+        let ret_str = CString::new(format!("{ret_cef}")).unwrap();
         (ret_str, socket::ReturnType::Bool)
     } else if (*ret).is_int.unwrap()(ret) == 1 {
         let ret_cef = (*ret).get_int_value.unwrap()(ret);
-        let ret_str = CString::new(format!("{}", ret_cef)).unwrap();
+        let ret_str = CString::new(format!("{ret_cef}")).unwrap();
         (ret_str, socket::ReturnType::Double)
     } else if (*ret).is_uint.unwrap()(ret) == 1 {
         let ret_cef = (*ret).get_uint_value.unwrap()(ret);
-        let ret_str = CString::new(format!("{}", ret_cef)).unwrap();
+        let ret_str = CString::new(format!("{ret_cef}")).unwrap();
         (ret_str, socket::ReturnType::Double)
     } else if (*ret).is_double.unwrap()(ret) == 1 {
         let ret_cef = (*ret).get_double_value.unwrap()(ret);
-        let ret_str = CString::new(format!("{}", ret_cef)).unwrap();
+        let ret_str = CString::new(format!("{ret_cef}")).unwrap();
         (ret_str, socket::ReturnType::Double)
     } else if (*ret).is_string.unwrap()(ret) == 1 {
         let ret_str_cef = (*ret).get_string_value.unwrap()(ret);
@@ -290,7 +290,9 @@ unsafe fn convert_type(
         for i in 0..length {
             let vali = (*array_val).get_value_byindex.unwrap()(array_val, i);
             let (valcstr, valtyp) = convert_type(vali, _eval_id, context);
-            let valstr = format!("'{},{}'", valtyp as u32, valcstr.into_string().unwrap());
+            let typ = valtyp as u32;
+            let valstr = valcstr.into_string().unwrap();
+            let valstr = format!("'{typ},{valstr}'");
             if i > 0 {
                 arraystr.push(';');
             }

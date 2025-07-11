@@ -161,7 +161,7 @@ fn generator(cef_path: std::path::Display) -> bindgen::Builder {
     config.insert(bindgen::CodegenConfig::TYPES);
     let callbacks = ToJavaCallbacks();
     bindgen::builder()
-        .clang_arg(format!("-I{}", cef_path))
+        .clang_arg(format!("-I{cef_path}"))
         .clang_arg(format!(
             "-I{}",
             "C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Include"

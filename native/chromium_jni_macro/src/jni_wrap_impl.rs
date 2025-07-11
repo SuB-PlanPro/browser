@@ -86,8 +86,8 @@ fn setup_argument(
         FnArg::Typed(pattern) => &pattern.ty,
         FnArg::Receiver(_) => todo!(),
     };
-    let arg = Ident::new(&format!("arg{}", index), Span::call_site());
-    let param = Ident::new(&format!("param{}", index), Span::call_site());
+    let arg = Ident::new(&format!("arg{index}"), Span::call_site());
+    let param = Ident::new(&format!("param{index}"), Span::call_site());
     let (arg_type, prepare, cleanup) = handle_arg(&arg, &param, ty);
 
     (
@@ -146,7 +146,7 @@ fn handle_return(retn: &Option<String>) -> (proc_macro2::TokenStream, proc_macro
                         quote! { return result as jni::sys::jlong },
                     )
                 } else {
-                    panic!("Invalid return type {:?}", retn);
+                    panic!("Invalid return type {retn:?}");
                 }
             }
         },
@@ -211,7 +211,7 @@ fn handle_arg(
             {
                 (quote! { #ty }, quote! { #arg }, quote! {})
             } else {
-                panic!("Invalid argument type {:?}", tystr);
+                panic!("Invalid argument type {tystr:?}");
             }
         }
     }
