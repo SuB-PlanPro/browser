@@ -1,5 +1,3 @@
-git/github/chromium/chromium/122.0.6261.69, None, approved, #13447
-git/github/chromiumembedded/cef/40272b5bc5890fc897011f81ee4e6f86e2f7ece9, BSD-3-Clause AND MIT AND Apache-2.0 AND LicenseRef-BSD-style AND CC0-1.0, approved, #13448
 maven/mavencentral/com.jcraft/jsch/0.1.55, BSD-3-Clause, approved, CQ19435
 maven/mavencentral/commons-io/commons-io/2.11.0, Apache-2.0, approved, CQ23745
 maven/mavencentral/commons-logging/commons-logging/1.0.4, Apache-2.0, approved, CQ1029
@@ -9,8 +7,8 @@ maven/mavencentral/org.apache.felix/org.apache.felix.gogo.runtime/1.1.6, Apache-
 maven/mavencentral/org.apache.felix/org.apache.felix.gogo.shell/1.1.4, Apache-2.0, approved, #17670
 maven/mavencentral/org.apache.xmlgraphics/xmlgraphics-commons/2.9, Apache-2.0, approved, #15397
 maven/mavencentral/org.apiguardian/apiguardian-api/1.1.2, Apache-2.0, approved, #17641
-maven/mavencentral/org.eclipse.set/org.eclipse.set.browser.cef.win32/60.23.1, EPL-2.0, approved, technology.set
-maven/mavencentral/org.eclipse.set/org.eclipse.set.browser.lib/60.23.1, EPL-2.0, approved, technology.set
+maven/mavencentral/org.eclipse.set/org.eclipse.set.browser.cef.win32/60.23.3, EPL-2.0, approved, technology.set
+maven/mavencentral/org.eclipse.set/org.eclipse.set.browser.lib/60.23.3, EPL-2.0, approved, technology.set
 maven/mavencentral/org.hamcrest/hamcrest-core/2.2, BSD-3-Clause, approved, clearlydefined
 maven/mavencentral/org.hamcrest/hamcrest/2.2, BSD-3-Clause, approved, #17677
 maven/mavencentral/org.junit.jupiter/junit-jupiter-api/5.10.1, EPL-2.0, approved, #9714
@@ -405,12 +403,12 @@ p2/orbit/p2.eclipse.plugin/org.eclipse.rcp/4.30.0.v20231201-0110, EPL-2.0, appro
 p2/orbit/p2.eclipse.plugin/org.eclipse.sdk/4.30.0.v20231201-0110, EPL-2.0, approved, eclipse.platform
 p2/orbit/p2.eclipse.plugin/org.eclipse.search.source/3.16.0.v20230921-2245, EPL-2.0, approved, eclipse.platform
 p2/orbit/p2.eclipse.plugin/org.eclipse.search/3.16.0.v20230921-2245, EPL-2.0, approved, eclipse.platform
-p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.cef.win32.source/60.23.1, EPL-2.0, approved, technology.set
-p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.cef.win32/60.23.1, EPL-2.0, approved, technology.set
-p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.lib.source/60.23.1, EPL-2.0, approved, technology.set
-p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.lib/60.23.1, EPL-2.0, approved, technology.set
-p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.source/60.23.1, EPL-2.0, approved, technology.set
-p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser/60.23.1, EPL-2.0, approved, technology.set
+p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.cef.win32.source/60.23.3, EPL-2.0, approved, technology.set
+p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.cef.win32/60.23.3, EPL-2.0, approved, technology.set
+p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.lib.source/60.23.3, EPL-2.0, approved, technology.set
+p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.lib/60.23.3, EPL-2.0, approved, technology.set
+p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.source/60.23.3, EPL-2.0, approved, technology.set
+p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser/60.23.3, EPL-2.0, approved, technology.set
 p2/orbit/p2.eclipse.plugin/org.eclipse.swt.win32.win32.x86_64.source/3.124.200.v20231113-1355, EPL-2.0, approved, eclipse.platform
 p2/orbit/p2.eclipse.plugin/org.eclipse.swt.win32.win32.x86_64/3.124.200.v20231113-1355, EPL-2.0, approved, eclipse.platform
 p2/orbit/p2.eclipse.plugin/org.eclipse.swt/3.124.200.v20231113-1355, EPL-2.0, approved, eclipse.platform

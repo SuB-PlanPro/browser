@@ -11,6 +11,6 @@
 		<relativePath>../..</relativePath>
 		<groupId>org.eclipse.set</groupId>
 		<artifactId>org.eclipse.set.browser.releng.parent</artifactId>
-		<version>60.23.2</version>
+		<version>60.23.3</version>
 	</parent>
 </project>
