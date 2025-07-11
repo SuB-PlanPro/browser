@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Browser
 Bundle-SymbolicName: org.eclipse.set.browser
-Bundle-Version: 60.23.3
+Bundle-Version: 60.23.4
 Automatic-Module-Name: org.eclipse.set.browser
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.eclipse.swt,
