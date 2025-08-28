@@ -157,6 +157,7 @@ pub fn cefswt_close_browser(browser: *mut cef::cef_browser_t, force: c_int) {
 }
 
 #[jni_wrapper("org.eclipse.set.browser.lib.cef_browser_t")]
+#[allow(clippy::unnecessary_unwrap)]
 pub fn cefswt_load_url(
     browser: *mut cef::cef_browser_t,
     url: *const c_char,
