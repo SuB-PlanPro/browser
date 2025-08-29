@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Chromium Binaries
 Bundle-SymbolicName: org.eclipse.set.browser.cef.win32;singleton:=true
-Bundle-Version: 60.24.1
+Bundle-Version: 60.24.2
 Automatic-Module-Name: org.eclipse.set.browser.win32
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.eclipse.core.runtime,
