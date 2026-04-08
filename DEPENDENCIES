@@ -1,8 +1,10 @@
+git/github/chromium/chromium/122.0.6261.69, None, approved, #13447
+git/github/chromiumembedded/cef/40272b5bc5890fc897011f81ee4e6f86e2f7ece9, BSD-3-Clause AND MIT AND Apache-2.0 AND LicenseRef-BSD-style AND CC0-1.0, approved, #13448
 maven/mavencentral/org.apache.felix/org.apache.felix.gogo.command/1.1.2, Apache-2.0, approved, #17675
 maven/mavencentral/org.apache.felix/org.apache.felix.gogo.runtime/1.1.6, Apache-2.0 AND MIT, approved, CQ22929
 maven/mavencentral/org.apache.felix/org.apache.felix.gogo.shell/1.1.4, Apache-2.0, approved, #17670
-maven/mavencentral/org.eclipse.set/org.eclipse.set.browser.cef.win32/2.6.0-SNAPSHOT, EPL-2.0, approved, technology.set
-maven/mavencentral/org.eclipse.set/org.eclipse.set.browser.lib/2.6.0-SNAPSHOT, EPL-2.0, approved, technology.set
+maven/mavencentral/org.eclipse.set/org.eclipse.set.browser.cef.win32/60.28.0, EPL-2.0, approved, technology.set
+maven/mavencentral/org.eclipse.set/org.eclipse.set.browser.lib/60.28.0, EPL-2.0, approved, technology.set
 maven/mavencentral/org.osgi/org.osgi.namespace.extender/1.0.1, Apache-2.0, approved, technology.osgi-technology
 maven/mavencentral/org.osgi/org.osgi.namespace.implementation/1.0.0, Apache-2.0, approved, technology.osgi-technology
 maven/mavencentral/org.osgi/org.osgi.service.cm/1.6.1, Apache-2.0, approved, technology.osgi-technology
@@ -218,9 +220,9 @@ p2/orbit/p2.eclipse.plugin/org.eclipse.platform/4.36.0.v20250528-1830, EPL-2.0, 
 p2/orbit/p2.eclipse.plugin/org.eclipse.rcp/4.36.0.v20250528-1830, EPL-2.0, approved, eclipse.platform
 p2/orbit/p2.eclipse.plugin/org.eclipse.sdk/4.36.0.v20250528-1830, EPL-2.0, approved, eclipse.platform
 p2/orbit/p2.eclipse.plugin/org.eclipse.search/3.17.200.v20250427-1424, EPL-2.0, approved, eclipse.platform
-p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.cef.win32/2.6.0.qualifier, EPL-2.0, approved, technology.set
-p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.lib/2.6.0.qualifier, EPL-2.0, approved, technology.set
-p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser/2.6.0.qualifier, EPL-2.0, approved, technology.set
+p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.cef.win32/60.28.0, EPL-2.0, approved, technology.set
+p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser.lib/60.28.0, EPL-2.0, approved, technology.set
+p2/orbit/p2.eclipse.plugin/org.eclipse.set.browser/60.28.0, EPL-2.0, approved, technology.set
 p2/orbit/p2.eclipse.plugin/org.eclipse.swt.svg/3.130.0.v20250501-0805, EPL-2.0, approved, eclipse.platform
 p2/orbit/p2.eclipse.plugin/org.eclipse.swt.tools.spies/3.109.600.v20250507-1837, EPL-2.0, approved, eclipse.platform
 p2/orbit/p2.eclipse.plugin/org.eclipse.swt.win32.win32.x86_64/3.130.0.v20250528-1759, EPL-2.0, approved, eclipse.platform
