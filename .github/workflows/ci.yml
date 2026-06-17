@@ -118,9 +118,11 @@ jobs:
         path: java/org.eclipse.set.browser.lib/res/
 
     - name: Build
+      working-directory: java
       run: mvn -T 1.5C -B clean verify
 
     - name: Publish
+      working-directory: java
       run: mvn -T 1.5C -B deploy -DaltDeploymentRepository=set-github::https://maven.pkg.github.com/${{ github.repository }}
       if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
       env:
